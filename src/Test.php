@@ -74,6 +74,7 @@ function Test() {
 		echo "<li>Mixed: $name (".$birthdate["birthdate"]." - $email - $phone) - husband: $husband - son: $son - daughter: $daughter"; 
 		echo "<ul><li>Address: $address</li><li>Father: $father</li><li>Mother: $mother</li><li>Parents: $parents</li></ul></li>";
 	}
+	echo "</ul>";
 
 	$randomLength = 10;
 	echo "<hr/><h3>Random $randomLength mixed names:</h3>";
