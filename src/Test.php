@@ -9,11 +9,13 @@
   * @version 1.0   
   */
 
+require_once("PhpVnDataGenerator/VnBigNumber.php");
 require_once("PhpVnDataGenerator/VnBase.php");
 require_once("PhpVnDataGenerator/VnFullname.php");
 require_once("PhpVnDataGenerator/VnPersonalInfo.php");
 
 use PhpVnDataGenerator\VnBase;
+use PhpVnDataGenerator\VnBigNumber;
 use PhpVnDataGenerator\VnFullname;
 use PhpVnDataGenerator\VnPersonalInfo;
 
@@ -21,6 +23,26 @@ use PhpVnDataGenerator\VnPersonalInfo;
   * @example Test PhpVnDataGenerator's functions.
   */
 function Test() {
+	echo "<pre>";
+	$money = "1234.5678901";
+	echo number_format($money, 7, '.', ',')."<hr/>";
+	$len = strlen($money);
+	$chu = VnBigNumber::ToString($money);
+	printf("%35s # length: %2d # %s<hr/>", VnBigNumber::Format($money), $len, $chu);
+	
+	$money = VnBigNumber::Random("1", "100000000000000000000000000");
+	$len = strlen($money);
+	$chu = VnBigNumber::ToString($money);
+	printf("%35s # length: %2d # %s<hr/>", VnBigNumber::Format($money), $len, $chu);
+	
+	for ($i=1; $i <= 27; $i++) {
+		$money = VnBase::RandomString($i, VnBase::VnNonZeroDigit + ($i == 1));
+		$len = strlen($money);
+		$chu = VnBigNumber::ToString($money);
+		printf("%35s # length: %2d # %s<br/>", VnBigNumber::Format($money), $len, $chu);
+	}
+	echo "</pre><hr/>";
+
 	$o = new VnFullname();
 	$p = new VnPersonalInfo();
 
@@ -35,7 +57,7 @@ function Test() {
 	$son      = $o->Children(VnBase::VnMale  , $name);
 	$daughter = $o->Children(VnBase::VnFemale, $name);
 	$address  = $p->Address();
-	echo "<li>Male: $name (".$birthdate["birthdate"]." - $email - $phone) - son: $son - daughter: $daughter"; 
+	echo "<li>Male: $name (".$birthdate["birthdate"]." # $email # $phone) # son: $son # daughter: $daughter"; 
 	echo "<ul><li>Address: $address</li><li>Father: $father</li><li>Mother: $mother</li><li>Parents: $parents</li></ul></li>";
 
 	$name     = $o->FullName(VnBase::VnFemale);
@@ -48,7 +70,7 @@ function Test() {
 	$son      = $o->Children(VnBase::VnMale  , "", $name);
 	$daughter = $o->Children(VnBase::VnFemale, "", $name);
 	$address  = $p->Address();
-	echo "<li>Female: $name (".$birthdate["birthdate"]." - $email - $phone) - son: $son - daughter: $daughter"; 
+	echo "<li>Female: $name (".$birthdate["birthdate"]." # $email # $phone) # son: $son # daughter: $daughter"; 
 	echo "<ul><li>Address: $address</li><li>Father: $father</li><li>Mother: $mother</li><li>Parents: $parents</li></ul></li>";
 	
 	//$name = $o->FullName(VnBase::VnMixed);
@@ -65,16 +87,15 @@ function Test() {
 		$wife     = $o->FullName(VnBase::VnFemale);
 		$son      = $o->Children(VnBase::VnMale  , $name, $wife);
 		$daughter = $o->Children(VnBase::VnFemale, $name, $wife);
-		echo "<li>Mixed: $name (".$birthdate["birthdate"]." - $email - $phone) - wife: $wife - son: $son - daughter: $daughter"; 
+		echo "<li>Mixed: $name (".$birthdate["birthdate"]." # $email # $phone) # wife: $wife # son: $son # daughter: $daughter"; 
 		echo "<ul><li>Address: $address</li><li>Father: $father</li><li>Mother: $mother</li><li>Parents: $parents</li></ul></li>";
 	} else {
 		$husband  = $o->FullName(VnBase::VnMale);
 		$son      = $o->Children(VnBase::VnMale  , $husband, $name);
 		$daughter = $o->Children(VnBase::VnFemale, $husband, $name);
-		echo "<li>Mixed: $name (".$birthdate["birthdate"]." - $email - $phone) - husband: $husband - son: $son - daughter: $daughter"; 
+		echo "<li>Mixed: $name (".$birthdate["birthdate"]." # $email # $phone) # husband: $husband # son: $son # daughter: $daughter"; 
 		echo "<ul><li>Address: $address</li><li>Father: $father</li><li>Mother: $mother</li><li>Parents: $parents</li></ul></li>";
 	}
-	echo "</ul>";
 
 	$randomLength = 10;
 	echo "<hr/><h3>Random $randomLength mixed names:</h3>";
@@ -106,7 +127,7 @@ function TestUniqueList(&$a, $isSort = VnBase::VnSorting) {
     for ($i=0; $i <= $n-2 ; $i++) { 
         if ($a[$i] == $a[$i+1] ||
             VnBase::Vn2En($a[$i]) == VnBase::Vn2En($a[$i+1])) {
-            array_push($duplicates, ["index"=>$i, "name"=>$a[$i]." - ".$a[$i+1]]);
+            array_push($duplicates, ["index"=>$i, "name"=>$a[$i]." # ".$a[$i+1]]);
         }
     }
     if (count($duplicates) == 0) {
