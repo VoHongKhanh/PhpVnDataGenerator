@@ -11,6 +11,7 @@
 &lt;body&gt;
 &lt;?php 
 use Illuminate\PhpVnDataGenerator\VnBase;
+use Illuminate\PhpVnDataGenerator\VnBigNumber;
 use Illuminate\PhpVnDataGenerator\VnFullname;
 use Illuminate\PhpVnDataGenerator\VnPersonalInfo;
 
@@ -18,6 +19,26 @@ use Illuminate\PhpVnDataGenerator\VnPersonalInfo;
   * @example Test PhpVnDataGenerator's functions.
   */
 function Test() {
+	echo "&lt;pre&gt;";
+	$money = "1234.5678901";
+	echo number_format($money, 7, '.', ',')."&lt;hr/&gt;";
+	$len = strlen($money);
+	$chu = VnBigNumber::ToString($money);
+	printf("%35s # length: %2d # %s&lt;hr/&gt;", VnBigNumber::Format($money), $len, $chu);
+	
+	$money = VnBigNumber::Random("1", "100000000000000000000000000");
+	$len = strlen($money);
+	$chu = VnBigNumber::ToString($money);
+	printf("%35s # length: %2d # %s&lt;hr/&gt;", VnBigNumber::Format($money), $len, $chu);
+	
+	for ($i=1; $i &lt;= 27; $i++) {
+		$money = VnBase::RandomString($i, VnBase::VnNonZeroDigit + ($i == 1));
+		$len = strlen($money);
+		$chu = VnBigNumber::ToString($money);
+		printf("%35s # length: %2d # %s&lt;br/&gt;", VnBigNumber::Format($money), $len, $chu);
+	}
+	echo "&lt;/pre&gt;&lt;hr/&gt;";
+	
 	$o = new VnFullname();
 	$p = new VnPersonalInfo();
 
